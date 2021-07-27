@@ -13,8 +13,6 @@ mod authc;
 
 fn main() {
     env_logger::init();
-    println!("Hello, world!");
-    info!("Hello from logger");
 
     let p = policy::PolicyReader::new("policy.json");
     match p.validate() {
@@ -26,7 +24,7 @@ fn main() {
     let mut router = Router::new();
 
     // Create AuthC middleware
-    let authc_middleware = authc::AuthC::new();
+    let authc_middleware = authc::AuthC::new(&p.parsed);
 
     // Declare routes
     router.get("/", authc_middleware, "index");

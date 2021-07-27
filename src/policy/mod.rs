@@ -9,12 +9,12 @@ use std::net::{IpAddr, Ipv4Addr};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct AuthCPolicy {
-    hosts: Vec<String>
+    pub hosts: Vec<String>
 }
 
 pub struct PolicyReader {
     pub policy: Value,
-    pub hosts: Vec<String>
+    pub parsed: AuthCPolicy
 }
 
 impl PolicyReader {
@@ -27,11 +27,11 @@ impl PolicyReader {
 
         let policy: Value = serde_json::from_reader(&file).unwrap();
         let policy_clone = policy.clone();
-        let hosts: Vec<String> = from_value(policy_clone["hosts"].to_owned()).unwrap();
+        let parsed: AuthCPolicy = from_value(policy_clone).unwrap();
 
         let reader = PolicyReader {
             policy,
-            hosts
+            parsed
         };
 
         reader
